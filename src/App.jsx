@@ -171,10 +171,10 @@ const FAQSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
 
           {/* Left Column: Heading */}
-          <div className="lg:col-span-5 space-y-10 sticky top-24">
+          <div className="lg:col-span-5 space-y-10 lg:sticky static top-24">
             <div className="space-y-4">
-              <span className="font-['Bellefair'] text-6xl md:text-7xl text-[#2a5da8] block mb-2">The Fine Print</span>
-              <h2 className="font-['Bellefair'] text-3xl md:text-6xl leading-tight text-brand-orange mb-6 uppercase tracking-wider">
+              <span className="font-['Bellefair'] text-4xl md:text-7xl text-[#2a5da8] block mb-2">The Fine Print</span>
+              <h2 className="font-['Bellefair'] text-2xl md:text-6xl leading-tight text-brand-orange mb-6 uppercase tracking-wider">
                 Curated Clarity
               </h2>
             </div>
@@ -191,8 +191,8 @@ const FAQSection = () => {
                   </div>
                   <span className="font-['Cinzel'] font-bold text-[#0a1d37]">Still have questions?</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-4 pl-14">Our concierge team is available 24/7 to provide personalized answers.</p>
-                <button className="ml-14 text-xs font-black uppercase tracking-widest text-brand-orange flex items-center gap-2 hover:gap-4 transition-all">
+                <p className="text-sm text-gray-500 mb-4 md:pl-14">Our concierge team is available 24/7 to provide personalized answers.</p>
+                <button className="md:ml-14 text-xs font-black uppercase tracking-widest text-brand-orange flex items-center gap-2 hover:gap-4 transition-all">
                   Contact Concierge <ArrowRight size={14} />
                 </button>
               </div>
@@ -379,9 +379,21 @@ function App() {
     ]
   };
 
-  const CARDS_PER_VIEW = 4; // number of cards visible at once on desktop
+  const [cardsPerView, setCardsPerView] = useState(4);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) setCardsPerView(1.2);
+      else if (window.innerWidth < 1024) setCardsPerView(2.5);
+      else setCardsPerView(4);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const currentTours = tourGrid[activeTab];
-  const maxSliderIndex = Math.max(0, currentTours.length - CARDS_PER_VIEW);
+  const maxSliderIndex = Math.max(0, currentTours.length - Math.floor(cardsPerView));
 
   const slidePrev = () => setTrendingSliderIndex((i) => Math.max(0, i - 1));
   const slideNext = () => setTrendingSliderIndex((i) => Math.min(maxSliderIndex, i + 1));
@@ -520,6 +532,12 @@ function App() {
           </div>
         </div>
 
+        {/* Mobile Menu Backdrop */}
+        <div 
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[-1] transition-opacity duration-500 lg:hidden ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+
         {/* Mobile Menu */}
         <div className={`lg:hidden transition-all duration-500 overflow-hidden ${mobileMenuOpen ? 'max-h-screen opacity-100 bg-white shadow-2xl' : 'max-h-0 opacity-0'}`}>
           <div className="px-6 py-10 space-y-6">
@@ -551,9 +569,9 @@ function App() {
             <span className="banner-tagline inline-block bg-brand-orange/90 backdrop-blur-md text-white px-5 py-1.5 rounded-full text-sm mb-6 shadow-lg">
               Explore the Extraordinary
             </span>
-            <h1 className="banner-heading text-4xl md:text-8xl text-white mb-8 drop-shadow-2xl font-black italic">
+            <h1 className="banner-heading text-4xl md:text-8xl text-white mb-8 drop-shadow-2xl font-black italic leading-[1.1]">
               GET THE VISA. <br />
-              <span className="banner-subtext text-brand-orange">Without Any Stress.</span>
+              <span className="banner-subtext text-3xl md:text-7xl text-brand-orange">Without Any Stress.</span>
             </h1>
             <p className="text-base md:text-xl text-white/90 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
               Tailored adventures designed for the discerning traveler. No templates, just memories.
@@ -561,13 +579,13 @@ function App() {
           </div>
 
           {/* Minimalist Ether Search Widget */}
-          <div className="max-w-5xl mx-auto mt-12 animate-fade-in-up transition-all" style={{ animationDelay: '0.2s' }}>
-            <div className="bg-white/95 backdrop-blur-md rounded-[50px] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] py-3 px-6 border border-gray-100/50">
-              <div className="flex flex-col md:flex-row items-center gap-2 relative">
+          <div className="max-w-5xl mx-auto mt-6 md:mt-12 animate-fade-in-up transition-all" style={{ animationDelay: '0.2s' }}>
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl md:rounded-[50px] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] py-4 md:py-3 px-4 md:px-6 border border-gray-100/50">
+              <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-2 relative">
 
                 {/* Destination */}
                 <div
-                  className={`flex-1 flex items-center gap-3 pl-4 border-r border-gray-100 group cursor-pointer py-1 transition-all rounded-full relative ${activeSearchCategory === 'destination' ? 'bg-gray-50' : ''}`}
+                  className={`flex-1 flex items-center gap-3 pl-4 md:border-r border-gray-100 group cursor-pointer py-2 md:py-1 transition-all rounded-xl md:rounded-full relative ${activeSearchCategory === 'destination' ? 'bg-gray-50' : ''}`}
                   onClick={() => setActiveSearchCategory(activeSearchCategory === 'destination' ? null : 'destination')}
                 >
                   <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#2a5da8]">
@@ -582,7 +600,7 @@ function App() {
                     />
                   </div>
                   {activeSearchCategory === 'destination' && (
-                    <div className={`absolute left-4 w-80 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
+                    <div className={`absolute left-0 md:left-4 w-full md:w-80 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
                       {/* Dynamic Arrow Nipple */}
                       <div className={`absolute w-3 h-3 bg-white/95 rotate-45 transition-all duration-300 ${isScrolled ? '-top-1.5 left-6 border-l border-t border-white/20' : '-bottom-1.5 left-6 border-r border-b border-white/20'}`}></div>
                       <p className="text-[10px] font-bold uppercase text-gray-400 mb-3 ml-2 tracking-widest">Top Destinations</p>
@@ -611,7 +629,7 @@ function App() {
 
                 {/* When */}
                 <div
-                  className={`flex-1 flex items-center gap-3 px-6 border-r border-gray-100 group cursor-pointer py-1 transition-all rounded-full relative ${activeSearchCategory === 'when' ? 'bg-gray-50' : ''}`}
+                  className={`flex-1 flex items-center gap-3 px-6 md:border-r border-gray-100 group cursor-pointer py-2 md:py-1 transition-all rounded-xl md:rounded-full relative ${activeSearchCategory === 'when' ? 'bg-gray-50' : ''}`}
                   onClick={() => setActiveSearchCategory(activeSearchCategory === 'when' ? null : 'when')}
                 >
                   <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-[#f58232]">
@@ -622,7 +640,7 @@ function App() {
                     <span className="font-medium text-gray-700 text-base">Anytime</span>
                   </div>
                   {activeSearchCategory === 'when' && (
-                    <div className={`absolute left-6 w-72 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
+                    <div className={`absolute left-0 md:left-6 w-full md:w-72 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
                       {/* Dynamic Arrow Nipple */}
                       <div className={`absolute w-3 h-3 bg-white/95 rotate-45 transition-all duration-300 ${isScrolled ? '-top-1.5 left-10 border-l border-t border-white/20' : '-bottom-1.5 left-10 border-r border-b border-white/20'}`}></div>
                       <p className="text-[10px] font-bold uppercase text-gray-400 mb-3 ml-2 tracking-widest">Recommended Seasons</p>
@@ -645,7 +663,7 @@ function App() {
 
                 {/* Travel Style */}
                 <div
-                  className={`flex-1 flex items-center gap-3 px-6 group cursor-pointer py-1 transition-all rounded-full relative ${activeSearchCategory === 'style' ? 'bg-gray-50' : ''}`}
+                  className={`flex-1 flex items-center gap-3 px-6 group cursor-pointer py-2 md:py-1 transition-all rounded-xl md:rounded-full relative ${activeSearchCategory === 'style' ? 'bg-gray-50' : ''}`}
                   onClick={() => setActiveSearchCategory(activeSearchCategory === 'style' ? null : 'style')}
                 >
                   <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-[#6366f1]">
@@ -656,7 +674,7 @@ function App() {
                     <span className="font-medium text-gray-700 text-base">Luxury Adventure</span>
                   </div>
                   {activeSearchCategory === 'style' && (
-                    <div className={`absolute left-6 w-72 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
+                    <div className={`absolute left-0 md:left-6 w-full md:w-72 bg-white/95 backdrop-blur-xl rounded-2xl p-4 z-50 animate-fade-in border border-white/20 transition-all duration-300 ${isScrolled ? 'top-full mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)]' : 'bottom-full mb-4 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]'}`}>
                       {/* Dynamic Arrow Nipple */}
                       <div className={`absolute w-3 h-3 bg-white/95 rotate-45 transition-all duration-300 ${isScrolled ? '-top-1.5 left-10 border-l border-t border-white/20' : '-bottom-1.5 left-10 border-r border-b border-white/20'}`}></div>
                       <p className="text-[10px] font-bold uppercase text-gray-400 mb-3 ml-2 tracking-widest">Select Your Vibe</p>
@@ -733,8 +751,8 @@ function App() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-8">
             <div className="max-w-4xl">
-              <span className="font-['Bellefair'] text-6xl md:text-7xl text-[#2a5da8] block mb-2 whitespace-nowrap">Handpicked Handcrafted</span>
-              <h2 className="font-['Bellefair'] text-3xl md:text-6xl leading-tight text-brand-orange mb-6 uppercase tracking-wider">Trending Now</h2>
+              <span className="font-['Bellefair'] text-4xl md:text-7xl text-[#2a5da8] block mb-2">Handpicked Handcrafted</span>
+              <h2 className="font-['Bellefair'] text-2xl md:text-6xl leading-tight text-brand-orange mb-6 uppercase tracking-wider">Trending Now</h2>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Skip the tourists, meet the locals. Our current most popular curated experiences that you won't find in guidebooks.
               </p>
@@ -772,14 +790,14 @@ function App() {
             <div className="overflow-hidden">
               <div
                 ref={trendingSliderRef}
-                className="flex gap-8 transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(calc(-${trendingSliderIndex} * (100% / ${CARDS_PER_VIEW} + 2rem / ${CARDS_PER_VIEW})))` }}
+                className="flex gap-4 md:gap-8 transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(calc(-${trendingSliderIndex} * (100% / ${cardsPerView} + ${window.innerWidth < 768 ? '1rem' : '2rem'} / ${cardsPerView})))` }}
               >
                 {currentTours.map((tour) => (
                   <div
                     key={tour.id}
                     className="group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100 transition-all hover:shadow-[0_40px_80px_rgba(42,93,168,0.15)] hover:-translate-y-2 flex flex-col h-full flex-shrink-0"
-                    style={{ width: `calc((100% - ${(CARDS_PER_VIEW - 1)} * 2rem) / ${CARDS_PER_VIEW})` }}
+                    style={{ width: `calc((100% - ${(cardsPerView - 1)} * ${window.innerWidth < 768 ? '1rem' : '2rem'}) / ${cardsPerView})` }}
                   >
                     <div className="relative h-80 overflow-hidden shrink-0">
                       <img src={tour.img} alt={tour.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
@@ -840,7 +858,7 @@ function App() {
           </div>
 
           {/* Dot Indicators */}
-          {currentTours.length > CARDS_PER_VIEW && (
+          {currentTours.length > cardsPerView && (
             <div className="flex justify-center gap-2 mt-10">
               {Array.from({ length: maxSliderIndex + 1 }).map((_, i) => (
                 <button

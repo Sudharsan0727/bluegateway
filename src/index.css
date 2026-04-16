@@ -867,3 +867,35 @@ body {
   background: #f58232;
   color: white;
 }
+/* Vanguard Showcase Styles */
+.vanguard-container { display: flex; height: 800px; background: #ffffff; overflow: hidden; }
+.vanguard-nav { width: 40%; display: flex; flex-direction: column; justify-content: center; padding-left: 10%; gap: 40px; background: #ffffff; position: relative; z-index: 10; }
+.case-item { cursor: pointer; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); opacity: 0.3; }
+.case-item.active { opacity: 1; transform: translateX(20px); }
+.case-num { font-family: Montserrat, sans-serif; font-weight: 800; font-size: 14px; color: #2a5da8; display: block; margin-bottom: 5px; }
+.case-title { font-family: Cinzel, serif; font-size: 32px; color: #0a1d37; line-height: 1.2; }
+.vanguard-display { width: 60%; position: relative; }
+.vanguard-img-reel { width: 100%; height: 100%; }
+.vanguard-item { width: 100%; height: 100%; position: absolute; inset: 0; }
+.vanguard-item img { width: 100%; height: 100%; object-fit: cover; }
+.vanguard-info-box { position: absolute; bottom: 0; left: 0; background: #ffffff; padding: 60px; width: 500px; box-shadow: 30px -30px 60px rgba(0,0,0,0.1); }
+
+/* Aurora Suite Styles */
+.aurora-container { padding: 154px 0; position: relative; overflow: hidden; }
+.aurora-grid { display: flex; gap: 15px; height: 700px; padding: 0 40px; position: relative; z-index: 2; }
+.aurora-card { flex: 1; position: relative; border-radius: 40px; overflow: hidden; transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
+.aurora-card:hover { flex: 3; }
+.aurora-card img { width: 100%; height: 100%; object-fit: cover; }
+.aurora-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 60px; background: linear-gradient(to top, rgba(5, 11, 20, 0.9), transparent 60%); opacity: 0; transition: all 0.5s ease 0.3s; }
+.aurora-card:hover .aurora-content { opacity: 1; }
+
+@media (max-width: 1024px) {
+  .vanguard-container { flex-direction: column; height: auto; }
+  .vanguard-nav { width: 100%; padding: 60px 20px; align-items: center; text-align: center; }
+  .vanguard-display { width: 100%; height: 500px; }
+  .vanguard-info-box { width: 100%; padding: 40px 20px; position: relative; }
+  .aurora-grid { flex-direction: column; height: auto; gap: 20px; }
+  .aurora-card { height: 400px; flex: none; }
+  .aurora-content { opacity: 1; padding: 30px; }
+}
+
