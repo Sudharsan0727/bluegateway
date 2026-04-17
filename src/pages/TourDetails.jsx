@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  Star, Clock, MapPin, ChevronRight, CheckCircle2, 
-  Calendar, Users, ShieldCheck, Heart, Share2, 
+import {
+  Star, Clock, MapPin, ChevronRight, CheckCircle2,
+  Calendar, Users, ShieldCheck, Heart, Share2,
   Info, Image, List, MessageSquare, ArrowLeft,
-  Plane, Bed, Coffee, Map
+  Plane, Bed, Coffee, Map, ChevronDown
 } from 'lucide-react';
 import { tours } from '../data/tours';
 
@@ -14,11 +14,20 @@ const TourDetails = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const [selectedDate, setSelectedDate] = useState('');
+  const [personCount, setPersonCount] = useState(2);
+  const [isBooked, setIsBooked] = useState(false);
+
   useEffect(() => {
     const foundTour = tours.find(t => t.id === parseInt(id));
     setTour(foundTour);
     window.scrollTo(0, 0);
   }, [id]);
+
+  // Generate some upcoming dates
+  const availableDates = [
+    'Oct 12, 2026', 'Oct 28, 2026', 'Nov 15, 2026', 'Dec 05, 2026'
+  ];
 
   if (!tour) {
     return (
@@ -31,6 +40,18 @@ const TourDetails = () => {
     );
   }
 
+  const handleBooking = () => {
+    if (!selectedDate) {
+      alert('Please select a departure date');
+      return;
+    }
+    setIsBooked(true);
+    setTimeout(() => setIsBooked(false), 5000);
+  };
+
+  const totalPrice = tour.price * personCount;
+  const totalOldPrice = tour.oldPrice * personCount;
+
   const tabs = [
     { id: 'overview', label: 'Overview', icon: <Info size={18} /> },
     { id: 'itinerary', label: 'Itinerary', icon: <List size={18} /> },
@@ -42,20 +63,20 @@ const TourDetails = () => {
     <div className="min-h-screen bg-[#fcfcfd] pb-20">
       {/* Hero Section */}
       <div className="relative h-[65vh] md:h-[75vh] w-full overflow-hidden">
-        <img 
-          src={tour.img} 
-          alt={tour.title} 
+        <img
+          src={tour.img}
+          alt={tour.title}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        
+
         {/* Top Controls */}
         <div className="absolute top-28 left-0 w-full px-4 md:px-12 flex justify-between items-center z-10">
           <Link to="/" className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-brand-blue transition-all border border-white/20 shadow-xl">
             <ArrowLeft size={24} />
           </Link>
           <div className="flex gap-4">
-            <button 
+            <button
               onClick={() => setIsFavorite(!isFavorite)}
               className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all border border-white/20 shadow-xl ${isFavorite ? 'bg-red-500 text-white border-red-500' : 'bg-white/20 text-white hover:bg-white hover:text-red-500'}`}
             >
@@ -108,7 +129,7 @@ const TourDetails = () => {
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 md:px-12 -mt-10 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
+
           {/* Left Column */}
           <div className="lg:col-span-8">
             {/* Navigation Tabs */}
@@ -117,11 +138,10 @@ const TourDetails = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
-                    activeTab === tab.id 
-                    ? 'bg-[#0a1d37] text-white shadow-lg shadow-blue-900/20' 
-                    : 'text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`flex items-center gap-2 px-6 py-4 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${activeTab === tab.id
+                      ? 'bg-[#0a1d37] text-white shadow-lg shadow-blue-900/20'
+                      : 'text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   {tab.icon}
                   {tab.label}
@@ -226,7 +246,7 @@ const TourDetails = () => {
                 </div>
               )}
 
-                {activeTab === 'reviews' && (
+              {activeTab === 'reviews' && (
                 <div className="animate-fade-in text-center py-12">
                   <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange mx-auto mb-6">
                     <MessageSquare size={32} />
@@ -241,46 +261,94 @@ const TourDetails = () => {
           {/* Right Column - Booking Card */}
           <div className="lg:col-span-4 lg:sticky lg:top-28 self-start">
             <div className="bg-white rounded-[32px] p-8 shadow-[0_30px_100px_rgba(10,29,55,0.1)] border border-gray-100">
-              <div className="flex items-end justify-between mb-8">
-                <div>
-                  <span className="block text-xs font-bold text-gray-400 uppercase mb-1">Total Price</span>
-                  <div className="flex items-end gap-2">
-                    <span className="text-4xl font-bold text-brand-blue leading-none">${tour.price}</span>
-                    <span className="text-sm font-bold text-gray-300 line-through mb-1">${tour.oldPrice}</span>
+              {isBooked ? (
+                <div className="py-12 text-center animate-fade-in">
+                  <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mx-auto mb-6 border-4 border-emerald-100">
+                    <CheckCircle2 size={40} />
                   </div>
+                  <h3 className="text-2xl font-bold text-[#0a1d37] mb-2">Request Sent!</h3>
+                  <p className="text-gray-500 text-sm mb-6 px-4">Our travel concierge will contact you within 24 hours to finalize your {tour.title} journey.</p>
+                  <button
+                    onClick={() => setIsBooked(false)}
+                    className="text-brand-orange font-bold text-sm uppercase tracking-widest hover:underline"
+                  >
+                    Make another request
+                  </button>
                 </div>
-                <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold">15% OFF</div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex items-end justify-between mb-8">
+                    <div>
+                      <span className="block text-xs font-bold text-gray-400 uppercase mb-1">Total Price</span>
+                      <div className="flex items-end gap-2">
+                        <span className="text-4xl font-bold text-brand-blue leading-none">${totalPrice}</span>
+                        <span className="text-sm font-bold text-gray-300 line-through mb-1">${totalOldPrice}</span>
+                      </div>
+                    </div>
+                    <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold">15% OFF</div>
+                  </div>
 
-              <div className="space-y-6 mb-8">
-                <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-brand-orange shadow-sm">
-                    <Calendar size={18} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase">Departure Date</span>
-                    <span className="text-sm font-bold text-gray-800">Select Date</span>
-                  </div>
-                  <ChevronRight size={16} className="ml-auto text-gray-300" />
-                </div>
-                
-                <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-brand-orange shadow-sm">
-                    <Users size={18} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase">Travelers</span>
-                    <span className="text-sm font-bold text-gray-800">2 Persons</span>
-                  </div>
-                  <ChevronRight size={16} className="ml-auto text-gray-300" />
-                </div>
-              </div>
+                  <div className="space-y-6 mb-8">
+                    {/* Date Selection */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Departure Date</label>
+                      <div className="relative">
+                        <div className="w-10 h-10 absolute left-4 top-1/2 -translate-y-1/2 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-brand-orange shadow-sm pointer-events-none">
+                          <Calendar size={18} />
+                        </div>
+                        <select
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          className="w-full bg-gray-50 rounded-2xl p-4 pl-16 border border-gray-100 font-bold text-gray-800 focus:outline-none focus:border-brand-orange appearance-none cursor-pointer"
+                        >
+                          <option value="">Select Date</option>
+                          {availableDates.map(date => (
+                            <option key={date} value={date}>{date}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      </div>
+                    </div>
 
-              <button className="w-full bg-[#0a1d37] hover:bg-brand-blue text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-900/20 transition-all hover:-translate-y-1 mb-6">
-                Reserve My Spot
-              </button>
+                    {/* Traveler Selection */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Travelers</label>
+                      <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border border-gray-100">
+                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-brand-orange shadow-sm">
+                          <Users size={18} />
+                        </div>
+                        <div className="flex flex-col flex-grow">
+                          <span className="text-sm font-bold text-gray-800">{personCount} Persons</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setPersonCount(Math.max(1, personCount - 1))}
+                            className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-brand-orange hover:text-white transition-all disabled:opacity-30"
+                            disabled={personCount <= 1}
+                          >
+                            -
+                          </button>
+                          <button
+                            onClick={() => setPersonCount(personCount + 1)}
+                            className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-brand-orange hover:text-white transition-all"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <p className="text-center text-xs text-gray-400 font-medium mb-8">No payment required now. Pay later.</p>
+                  <button
+                    onClick={handleBooking}
+                    className="w-full bg-[#0a1d37] hover:bg-brand-blue text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-900/20 transition-all hover:-translate-y-1 mb-6 active:scale-95"
+                  >
+                    Reserve My Spot
+                  </button>
+
+                  <p className="text-center text-xs text-gray-400 font-medium mb-8">No payment required now. Pay later.</p>
+                </>
+              )}
 
               <div className="space-y-4 pt-8 border-t border-gray-50">
                 <div className="flex items-center gap-3 text-sm font-semibold text-gray-600">
@@ -288,11 +356,11 @@ const TourDetails = () => {
                   Free Cancellation up to 48h
                 </div>
                 <div className="flex items-center gap-3 text-sm font-semibold text-gray-600">
-                   <ShieldCheck size={18} className="text-emerald-500" />
+                  <ShieldCheck size={18} className="text-emerald-500" />
                   Best Price Guarantee
                 </div>
                 <div className="flex items-center gap-3 text-sm font-semibold text-gray-600">
-                   <ShieldCheck size={18} className="text-emerald-500" />
+                  <ShieldCheck size={18} className="text-emerald-500" />
                   24/7 Local Assistance
                 </div>
               </div>

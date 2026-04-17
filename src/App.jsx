@@ -25,6 +25,7 @@ import {
   MapPin,
   Bed,
   Plane,
+  ArrowRight,
 } from 'lucide-react';
 
 import logo from './assets/logo.png';
