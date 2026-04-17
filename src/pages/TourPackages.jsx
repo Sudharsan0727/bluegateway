@@ -1,23 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Star, Clock, MapPin, ChevronRight, Filter } from 'lucide-react';
-
-import imgSwitzerland from '../assets/switzerland.png';
-import imgBali from '../assets/bali.png';
-import imgParis from '../assets/paris.png';
-import imgSantorini from '../assets/santorini.png';
-import imgTokyo from '../assets/gallery-tokyo.png';
-import imgSafari from '../assets/gallery-safari.png';
+import { tours } from '../data/tours';
 import imgHeroBg from '../assets/hero-bg.png';
 
 const TourPackages = () => {
-  const packages = [
-    { title: 'Grand Tour of Switzerland', location: 'Swiss Alps', price: 2499, duration: '10 Days', rating: 4.9, img: imgSwitzerland, type: 'Luxury' },
-    { title: 'Tropical Paradise Escape', location: 'Bali, Indonesia', price: 1299, duration: '7 Days', rating: 4.8, img: imgBali, type: 'Honeymoon' },
-    { title: 'European Romance Tour', location: 'Paris, France', price: 1899, duration: '5 Days', rating: 4.9, img: imgParis, type: 'Romantic' },
-    { title: 'Aegean Sunset Wonders', location: 'Santorini, Greece', price: 1499, duration: '6 Days', rating: 5.0, img: imgSantorini, type: 'Trending' },
-    { title: 'Tokyo Neon Escape', location: 'Tokyo, Japan', price: 2199, duration: '8 Days', rating: 4.8, img: imgTokyo, type: 'Adventure' },
-    { title: 'Sahara Desert Expedition', location: 'Morocco', price: 1100, duration: '5 Days', rating: 4.7, img: imgSafari, type: 'Adventure' }
-  ];
+  const packages = tours;
 
   return (
     <div className="pb-20 min-h-screen bg-gray-50 flex flex-col">
@@ -66,10 +54,14 @@ const TourPackages = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {packages.map((pkg, i) => (
-            <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <Link 
+              key={i} 
+              to={`/tour/${pkg.id}`}
+              className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+            >
                <div className="relative h-64 overflow-hidden">
                  <img src={pkg.img} alt={pkg.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-[#0a1d37]">{pkg.type}</div>
+                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-[#0a1d37]">{pkg.tag || pkg.type}</div>
                  <div className="absolute bottom-4 right-4 bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg">
                    <Clock size={12} /> {pkg.duration}
                  </div>
@@ -85,12 +77,12 @@ const TourPackages = () => {
                      <span className="text-xs text-gray-400 font-semibold uppercase block mb-1">Starting From</span>
                      <span className="text-2xl font-bold text-brand-blue">${pkg.price}</span>
                    </div>
-                   <button className="bg-gray-100 text-[#0a1d37] w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-colors">
+                   <div className="bg-gray-100 text-[#0a1d37] w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-colors">
                      <ChevronRight size={20} />
-                   </button>
+                   </div>
                  </div>
                </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
