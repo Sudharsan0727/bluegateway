@@ -6,9 +6,52 @@
   --color-brand-blue: #2a5da8;
   --color-brand-orange: #f58232;
   --color-brand-dark: #0a1d37;
+  --color-brand-red: #D71920;
 }
 
 /* ... existing code ... */
+
+/* Minimalist Redesign Utilities */
+.shadow-airbnb {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.shadow-airbnb-hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.23);
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.selection-brand-blue::selection {
+  background-color: rgba(42, 93, 168, 0.1);
+  color: #2a5da8;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
 
 @font-face {
   font-family: 'Beauty Nature';
